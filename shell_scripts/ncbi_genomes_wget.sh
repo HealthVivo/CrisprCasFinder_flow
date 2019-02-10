@@ -3,7 +3,7 @@
 #Ian Rambo
 #February 9, 2019
 #Thirteen... that's a mighty unlucky number... for somebody!
-#PURPOSE: download genomes from NCBI FTP in parallel.
+#PURPOSE: download Genbank genomes from NCBI FTP in parallel.
 #md5 hashes of downloaded genomes will be compared to those on NCBI FTP.
 
 #Positional Parameters

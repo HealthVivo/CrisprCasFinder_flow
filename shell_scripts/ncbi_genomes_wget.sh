@@ -45,7 +45,7 @@ prefix=$(basename "$genomeTable" | cut -f1 -d'.')
 md5sum_file=${prefix}_md5sum.out
 md5sum_check=${prefix}_md5sumchk.out
 awk '{FS=","} {print $15}' $genomeTable | grep 'ftp' | sed 's/"//g' | \
-    parallel --eta --jobs $nJob --joblog "md5sum.log wget --quiet -O - {}/md5checksums.txt && sleep $sleeptime" | \
+    parallel --eta --jobs $nJob --joblog md5sum.log "wget --quiet -O - {}/md5checksums.txt && sleep $sleeptime" | \
     grep '_genomic.fna.gz' | \
     grep -v 'rna_from\|cds_from' > $md5sum_file
 

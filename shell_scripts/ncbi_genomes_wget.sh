@@ -54,7 +54,7 @@ then
     nfail=$(wc -l "$md5sum_check" | cut -f1 -d' ')
     printf "\n WARNING !! $nfail downloaded files were not OK. Check $md5sum_check for the list of filenames \n"
 else
-    printf "\n Downloaded files verified. All OK ! \n"
+    printf "\nDownloaded files verified. All OK ! \n"
 fi
 
 exit 0

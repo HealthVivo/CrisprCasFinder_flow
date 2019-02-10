@@ -108,8 +108,13 @@ for g in genomes_to_run :
             print("error code", gzipexc.returncode, gzipexc.output)
         #Test the gzip compression
         try:
+            print('testing gzip compression')
             gztest_cmd = 'gzip -t %s' % g
             gztest_proc = subprocess.Popen(gztest_cmd, shell = True)
+            streamdata = gztest_proc.communicate()[0]
+            rc = proc.returncode
+            if rc == 0:
+                print('gzip compression successful')
         except subprocess.CalledProcessError as gztestexc:
             print("error code", gztestexc.returncode, gztestexc.output)
 

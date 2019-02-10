@@ -16,6 +16,7 @@ joblog=$4 #joblog from gnu parallel
 #Create the output directory if not present
 [[ -d $dbDir ]] || mkdir $dbDir
 
+printf "\n################ Downloading genome files ###############\n"
 cd $dbDir
 grep -o "ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/[0-9]\{3\}/[0-9]\{3\}/[0-9]\{3\}/GCA_[0-9]\{9\}.[0-9]*[\.\_A-Za-z0-9\-]*" $genomeTable | \
     sed  -r 's|(ftp://ftp.ncbi.nlm.nih.gov/genomes/all/)(GCA/)([0-9]{3}/)([0-9]{3}/)([0-9]{3}/)(GCA_.+)|\1\2\3\4\5\6/\6_genomic.fna.gz|' | \
@@ -34,14 +35,14 @@ else
 fi
 
 #Download md5 files and make sure genomes are correct
-printf "\n################ Downloading md5sum ###############\n"
-
-awk '{FS=","} {print $15}' ${genomeTable} | grep 'ftp' - | parallel --no-notice --jobs ${nJob} --joblog md5sum.log wget -q -O - {}/md5checksums.txt | grep "_protein.faa.gz" >> ${genomeTable}_md5sum.out
+printf "\n################ Downloading md5sum files ###############\n"
+prefix=$(basename $genomeTable)
+awk '{FS=","} {print $15}' /home/rambo/database/genome/ftp_tables/ncbi_prokaryote_complete_chromosome_ftp_02-09-2019.csv | grep 'ftp' | sed 's/"//g' | parallel --jobs 4 --joblog md5sum.log wget -q -O - {}/md5checksums.txt | grep '_genomic.fna.gz' | grep -v 'rna_from\|cds_from' > ${prefix}_md5sum.out
 printf "\n################ Download finished ###############\n"
 printf "\n################ Verifying downloaded files using  md5sum ###############\n"
 
 # verification of downloaded files
-md5sum --quiet -c ${genomeTable}_md5sum.out > ../md5sumchk.out
+md5sum --quiet -c ${prefix}_md5sum.out > ${prefix}_md5sumchk.out
 
 if [ -s "../md5sumchk.out" ]
 then

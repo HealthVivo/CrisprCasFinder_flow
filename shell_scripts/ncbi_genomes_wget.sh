@@ -2,9 +2,11 @@
 
 #Ian Rambo
 #February 9, 2019
-#PURPOSE: download genomes from NCBI FTP in parallel.
 #Thirteen... that's a mighty unlucky number... for somebody!
+#PURPOSE: download genomes from NCBI FTP in parallel.
+#md5 hashes of downloaded genomes will be compared to those on NCBI FTP.
 
+#Positional Parameters
 genomeTable=$1 #file from NCBI containing FTP path(s)
 dbDir=$2 #output directory
 nJob=$3 #number of simultaneous parallel jobs
@@ -49,7 +51,7 @@ md5sum --quiet -c $md5sum_file > $md5sum_check
 
 if [ -s "$md5sum_check" ]
 then
-    nfail=$(wc -l "$md5sum_check")
+    nfail=$(wc -l "$md5sum_check" | cut -f1 -d' ')
     printf "\n WARNING !! $nfail downloaded files were not OK. Check $md5sum_check for the list of filenames \n"
 else
     printf "\n Downloaded files verified. All OK ! \n"

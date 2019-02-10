@@ -12,7 +12,7 @@ Ian Rambo
 February 9, 2019
 Purpose:
 Wrapper script for running multiple batch loops of crisprCasFinder
-in parallel via GNU Parallel
+in parallel via GNU Parallel.
 '''
 #------------------------------------------------------------------------------
 def optstring_join(optdict):

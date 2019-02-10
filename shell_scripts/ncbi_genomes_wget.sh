@@ -42,7 +42,7 @@ printf "\n################ Downloading md5sum files ###############\n"
 prefix=$(basename $genomeTable | cut -f1 -d'.')
 md5sum_file=${prefix}_md5sum.out
 md5sum_check=${prefix}_md5sumchk.out
-awk '{FS=","} {print $15}' $genomeTable | grep 'ftp' | sed 's/"//g' | parallel --eta --jobs 4 --joblog md5sum.log wget -q -O - {}/md5checksums.txt | grep '_genomic.fna.gz' | grep -v 'rna_from\|cds_from' > $md5sum_file
+awk '{FS=","} {print $15}' $genomeTable | grep 'ftp' | sed 's/"//g' | parallel --eta --jobs $nJob --joblog md5sum.log wget -q -O - {}/md5checksums.txt | grep '_genomic.fna.gz' | grep -v 'rna_from\|cds_from' > $md5sum_file
 printf "\n################ Download finished ###############\n"
 printf "\n################ Verifying downloaded files using  md5sum ###############\n"
 

@@ -3,6 +3,7 @@
 #Ian Rambo
 #February 9, 2019
 #PURPOSE: download genomes from NCBI FTP in parallel.
+#Thirteen... that's a mighty unlucky number... for somebody!
 
 genomeTable=$1 #file from NCBI containing FTP path(s)
 dbDir=$2 #output directory

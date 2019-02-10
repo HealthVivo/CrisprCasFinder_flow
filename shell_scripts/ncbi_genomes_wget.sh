@@ -38,16 +38,19 @@ fi
 #Download md5 files and make sure genomes are correct
 printf "\n################ Downloading md5sum files ###############\n"
 prefix=$(basename $genomeTable)
-awk '{FS=","} {print $15}' /home/rambo/database/genome/ftp_tables/ncbi_prokaryote_complete_chromosome_ftp_02-09-2019.csv | grep 'ftp' | sed 's/"//g' | parallel --jobs 4 --joblog md5sum.log wget -q -O - {}/md5checksums.txt | grep '_genomic.fna.gz' | grep -v 'rna_from\|cds_from' > ${prefix}_md5sum.out
+md5sum_file=${prefix}_md5sum.out
+md5sum_check=${prefix}_md5sumchk.out
+awk '{FS=","} {print $15}' /home/rambo/database/genome/ftp_tables/ncbi_prokaryote_complete_chromosome_ftp_02-09-2019.csv | grep 'ftp' | sed 's/"//g' | parallel --jobs 4 --joblog md5sum.log wget -q -O - {}/md5checksums.txt | grep '_genomic.fna.gz' | grep -v 'rna_from\|cds_from' > $md5sum_file
 printf "\n################ Download finished ###############\n"
 printf "\n################ Verifying downloaded files using  md5sum ###############\n"
 
 # verification of downloaded files
-md5sum --quiet -c ${prefix}_md5sum.out > ${prefix}_md5sumchk.out
+md5sum --quiet -c $md5sum_file > $md5sum_check
 
-if [ -s "../md5sumchk.out" ]
+if [ -s "$md5sum_check" ]
 then
-    printf "\n WARNING !! Some downloaded files were not OK. Check md5sumchk.out for the list of filenames \n"
+    nfail=$(wc -l "$md5sum_check")
+    printf "\n WARNING !! $nfail downloaded files were not OK. Check $md5sum_check for the list of filenames \n"
 else
     printf "\n Downloaded files verified. All OK ! \n"
 fi

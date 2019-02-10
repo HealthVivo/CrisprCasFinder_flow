@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """
+2019 Ian Rambo
 Fetch FASTA sequences from Prodigal output based on CrisprCasFinder gff3 report.
 
 Specify an output data frame for TARGET. This will contain the
@@ -43,7 +44,7 @@ for cas in cas_ids:
     with open(sfile, 'w') as sf:
         subset = crdf[crdf['source'] == cas]
         seqids = subset['seqid'].tolist()
-        seqobjs = [seq_dict[x] if x in seq_dict else print('%s not in seq_dict' % x) for x in seqids]
+        seqobjs = [seq_dict[x] if x in seq_dict else print('result id %s not in seq_dict' % x) for x in seqids]
         seqobjs = [x for x in seqobjs if x]
         if seqobjs:
             SeqIO.write(seqobjs, sf, 'fasta')

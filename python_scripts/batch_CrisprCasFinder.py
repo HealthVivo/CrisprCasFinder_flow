@@ -95,7 +95,7 @@ if remain :
 else :
     pass
 
-outDir = os.path.join(opts.workingDir[0], 'batch-%d-crisprCasFinder-%s' % (opts.jobID[0], opts.projectName[0]))
+outDir = os.path.join(opts.workingDir[0], 'batch-%d-crisprCasFinder-%s' % (opts.jobID[0], opts.projectName))
 if not os.path.isdir(outDir) :
     os.makedirs(outDir)
 else :

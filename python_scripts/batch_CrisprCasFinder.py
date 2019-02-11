@@ -67,7 +67,7 @@ parser.add_argument('--genomeDir', type=str, dest='genomeDir', action='store', n
 parser.add_argument('--workingDir', type=str, dest='workingDir', action='store', nargs=1, help='working directory')
 parser.add_argument('--msfThreads', type=int, dest='msfThreads', action='store', const=1, nargs='?', help='MacSyFinder threads')
 parser.add_argument('--projectName', type=str, dest='projectName', action='store', const='', nargs = '?', help='project name for output directories')
-parser.add_argument('--hashAlg', type=str, dest='hashAlg', action='store', nargs=1, const='sha256', help='hash algorithm to use for testing gzip integrity. Choose from: sha1, sha224, sha256, sha384, sha512, md5. Default == sha256')
+parser.add_argument('--hashAlg', type=str, dest='hashAlg', action='store', const='sha256', nargs = '?', help='hash algorithm to use for testing gzip integrity. Choose from: sha1, sha224, sha256, sha384, sha512, md5. Default == sha256')
 opts = parser.parse_args()
 #==============================================================================
 #Command line options for CrisprCasFinder

@@ -69,7 +69,7 @@ parser.add_argument('--msfThreads', type=int, dest='msfThreads', action='store',
 parser.add_argument('--projectName', type=str, dest='projectName', action='store', const='', nargs = '?', help='project name for output directories')
 parser.add_argument('--hashAlg', type=str, dest='hashAlg', action='store', const='sha256', nargs = '?', help='hash algorithm to use for testing gzip integrity. Choose from: sha1, sha224, sha256, sha384, sha512, md5. Default == sha256')
 opts = parser.parse_args()
-print(opts.nJobs[0])
+
 #==============================================================================
 #Command line options for CrisprCasFinder
 ccfinder_opts = {'-log':'', '-copyCSS':'', '-repeats':'', '-DBcrispr':'',
@@ -80,14 +80,14 @@ ccfinder_opts = {'-log':'', '-copyCSS':'', '-repeats':'', '-DBcrispr':'',
 ccfinder_optstring = optstring_join(ccfinder_opts)
 print('CRISPRCasFinder options:\n#=============\n%s\n#=============' % ccfinder_optstring)
 #==============================================================================
-globString = '%s/*.%s' % (opts.genomeDir, opts.ending)
+globString = '%s/*.%s' % (opts.genomeDir[0], opts.ending[0])
 
 genomePaths = glob.glob(globString)
 
-perLoop = len(genomePaths) / opts.nJobs
-remain = len(genomePaths) % opts.nJobs
+perLoop = len(genomePaths) / opts.nJobs[0]
+remain = len(genomePaths) % opts.nJobs[0]
 
-indexes = list(range(0, len(genomePaths) + 1, int(len(genomePaths)/opts.nJobs)))
+indexes = list(range(0, len(genomePaths) + 1, int(len(genomePaths)/opts.nJobs[0])))
 
 if remain :
     #indexes[-1] += remain - 1
@@ -95,21 +95,21 @@ if remain :
 else :
     pass
 
-outDir = os.path.join(opts.workingDir, 'batch-%d-crisprCasFinder-%s' % (opts.jobID, opts.projectName))
+outDir = os.path.join(opts.workingDir[0], 'batch-%d-crisprCasFinder-%s' % (opts.jobID[0], opts.projectName[0]))
 if not os.path.isdir(outDir) :
     os.makedirs(outDir)
 else :
     pass
 os.chdir(outDir)
 #==============================================================================
-genomes_to_run = genomePaths[indexes[opts.jobID]:indexes[(opts.jobID + 1)]]
+genomes_to_run = genomePaths[indexes[opts.jobID[0]]:indexes[(opts.jobID[0] + 1)]]
 analyzed = 0
 
 for g in genomes_to_run :
     #Is file gzip compressed?
     if magic.from_file(g).startswith('gzip compressed data') and g.endswith('.gz'):
         #Get hash for gzipped file
-        hash0 = hash_sum(g, opts.hashAlg)
+        hash0 = hash_sum(g, opts.hashAlg[0])
 
         try:
             gunzip_cmd = 'gunzip %s' % g
@@ -144,13 +144,13 @@ for g in genomes_to_run :
             logging.error("error code", gztestexc.returncode, gztestexc.output)
 
         #Get hash for re-gzipped file
-        hash1 = hash_sum(g, opts.hashAlg)
+        hash1 = hash_sum(g, opts.hashAlg[0])
 
         #Do the hashes match?
         if hash0 == hash1:
             continue
         else:
-            wmessage = 'WARNING: file %s may be damaged. %s hashes do not match for gzipped files' % (g, opts.hashAlg)
+            wmessage = 'WARNING: file %s may be damaged. %s hashes do not match for gzipped files' % (g, opts.hashAlg[0])
             logging.warning(wmessage)
 
     else:
@@ -162,4 +162,4 @@ for g in genomes_to_run :
             logging.error("error code", ccfindexc.returncode, ccfindexc.output)
         analyzed += 1
 
-    logging.info('analysis complete for genome %d of %d, batch %d' % (analyzed, len(genomes_to_run), opts.jobID))
+    logging.info('analysis complete for genome %d of %d, batch %d' % (analyzed, len(genomes_to_run), opts.jobID[0]))

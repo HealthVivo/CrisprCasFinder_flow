@@ -146,7 +146,7 @@ for g in genomes_to_run :
         hash1 = hash_sum(g, opts.hashAlg)
 
         #Do the hashes match?
-        if hash0 == hash1
+        if hash0 == hash1:
             continue
         else:
             wmessage = 'WARNING: file %s may be damaged. %s hashes do not match for gzipped files' % (g, opts.hashAlg)

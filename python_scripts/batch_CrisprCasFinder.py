@@ -76,7 +76,7 @@ ccfinder_opts = {'-log':'', '-copyCSS':'', '-repeats':'', '-DBcrispr':'',
 '-DIRrepeat':'', '-cas':'', '-ccvRep':'', '-vicinity':10000, '-cluster':20000,
 '-minDR':16, '-maxDR':72, '-minSP':8, '-maxSP':64, '-cpuM':opts.msfThreads,
 '-definition':'SubTyping', '-getSummaryCasfinder':'', '-betterDetectTrunc':'',
-'-quiet':'', '-soFile':ccfinder_sofile, '-keep':''}
+'-soFile':ccfinder_sofile, '-keep':''}
 ccfinder_optstring = optstring_join(ccfinder_opts)
 print('CRISPRCasFinder options:\n#=============\n%s\n#=============' % ccfinder_optstring)
 #==============================================================================

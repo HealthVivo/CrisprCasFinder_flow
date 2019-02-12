@@ -14,6 +14,11 @@ Purpose:
 Wrapper script for running multiple batch loops of crisprCasFinder
 in parallel via GNU Parallel.
 
+"""
+WHAT IS FASTER THAN GZIP
+If file was gzipper prior and downloaded, will different compression level make different md5?
+"""
+
 Thirteen... that's a mighty unlucky number... for somebody!
 '''
 #------------------------------------------------------------------------------
@@ -140,17 +145,19 @@ for g in genomes_to_run :
             rc = proc.returncode
             if rc == 0:
                 logging.info('gzip compression successful')
+            gztest = True
         except subprocess.CalledProcessError as gztestexc:
             logging.error("error code", gztestexc.returncode, gztestexc.output)
+            gztest = False
 
         #Get hash for re-gzipped file
         hash1 = hash_sum(g, opts.hashAlg[0])
 
         #Do the hashes match?
-        if hash0 == hash1:
+        if hash0 == hash1 and gztest:
             continue
-        else:
-            wmessage = 'WARNING: file %s may be damaged. %s hashes do not match for gzipped files' % (g, opts.hashAlg[0])
+        elif hash0 != hash1 and gztest:
+            wmessage = 'WARNING: source file %s may have a differing compression level. %s hashes do not match for gzipped files' % (g, opts.hashAlg[0])
             logging.warning(wmessage)
 
     else:

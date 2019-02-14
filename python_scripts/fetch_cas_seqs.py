@@ -30,20 +30,21 @@ if not os.path.exists(args['workdir'][0]):
 else:
     pass
 #------------------------------------------------------------------------------
+print('BEGIN')
 crdf = pd.read_csv(args['cas_gff'][0], comment = '#', header = None,
 names = ['seqid', 'source', 'ftype', 'targetid', 'phase',
 'start', 'end', 'strand', 'attributes'], sep = '\s+')
 
 cas_ids = list(set(crdf['source'].tolist()))
 seq_dict = SeqIO.to_dict(SeqIO.parse(args['prodigal'][0], 'fasta'))
-print(seq_dict)
+
 for cas in cas_ids:
     print('processing %s...' % cas)
     sfile = os.path.join(args['workdir'][0], '%s_%s_prodigalSeqs.faa' % (cas, args['project_name'][0]))
     nseqs = 0
     with open(sfile, 'w') as sf:
         subset = crdf[crdf['source'] == cas]
-        seqids = subset['seqid'].tolist()
+        seqids = list(set(subset['seqid'].tolist()))
         seqobjs = [seq_dict[x] if x in seq_dict else print('result id %s not in seq_dict' % x) for x in seqids]
         seqobjs = [x for x in seqobjs if x]
         if seqobjs:
@@ -54,3 +55,4 @@ for cas in cas_ids:
             message = 'No sequence objects found for %s' % cas
             warn(message)
 #==============================================================================
+print('FINISHED')

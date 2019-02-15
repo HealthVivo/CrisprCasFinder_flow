@@ -42,7 +42,8 @@ for record in seq_recs:
     if record.id in header_counts:
         header_counts[record.id] += 1
         nrecord = record
-        nrecord.id = id_legal + '_%d' % header_counts[record.id]
+        nrecord.id = id_legal + '_copy%d' % header_counts[record.id]
+        nrecord.description = ''
         seq_recs_uhead.append(nrecord)
     else:
         header_counts[record.id] = 0
@@ -59,23 +60,29 @@ elif opts.ambig and opts.seqtype[0] == 'nuc':
 else:
     seq_objs = [seq_dict[a] for a in seq_dict.keys() if seq_dict[a]]
 
-seq_objs_out = []
-for s in seq_objs:
-    id_legal = illegals.sub('_', s.id)
-    if s.id in header_counts:
-        header_counts[s.id] += 1
-        sn = s
-        sn.id = id_legal + '_%d' % header_counts[s.id]
-        seq_objs_out.append(sn)
-    else:
-        header_counts[s.id] = 0
-        seq_objs_out.append(s)
-
-if seq_objs_out:
-    print('%d total sequences, removed %d sequences with ambiguous characters, %d remain' % (len(seq_dict.keys()), (len(seq_dict.keys()) - len(seq_objs_out)), len(seq_objs_out)))
+# seq_objs_out = []
+# for s in seq_objs:
+#     id_legal = illegals.sub('_', s.id)
+#     if s.id in header_counts:
+#         header_counts[s.id] += 1
+#         sn = s
+#         sn.id = id_legal + '_%d' % header_counts[s.id]
+#         seq_objs_out.append(sn)
+#     else:
+#         header_counts[s.id] = 0
+#         seq_objs_out.append(s)
+#print(seq_objs_out)
+#if seq_objs_out:
+if seq_objs:
+    #print('%d total sequences, removed %d sequences with ambiguous characters, %d remain' % (len(seq_dict.keys()), (len(seq_dict.keys()) - len(seq_objs_out)), len(seq_objs_out)))
+    print('%d total sequences, removed %d sequences with ambiguous characters, %d remain' % (len(seq_dict.keys()), (len(seq_dict.keys()) - len(seq_objs)), len(seq_objs)))
     with open(opts.output_file[0], 'w') as out_handle:
-        print('writing %d sequences to file %s' % (len(seq_objs_out), opts.output_file[0]))
-        SeqIO.write(seq_objs_out, out_handle, 'fasta')
+        #print('writing %d sequences to file %s' % (len(seq_objs_out), opts.output_file[0]))
+        print('writing %d sequences to file %s' % (len(seq_objs), opts.output_file[0]))
+        #SeqIO.write(seq_objs_out, out_handle, 'fasta')
+        SeqIO.write(seq_objs, out_handle, 'fasta')
+
+
 else:
     logging.warning('WARNING: no sequence objects to write! Exiting...')
     quit()

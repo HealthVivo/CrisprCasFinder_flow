@@ -22,7 +22,7 @@ for i in $(find "${ARGS[@]:2}" -type f -name "*_prodigalSeqs.faa" ! -size 0 -exe
     muscle -seqtype auto -in $comboFastaUAmbig -out $muscleOut -maxiters 1000 && \
     echo "completed MUSCLE for ${i}" && \
     trimalOut="${aligndir}/$(basename ${muscleOut} | cut -f1 -d'.')_trimal.afa" && \
-    trimAl -in $muscleOut -out $trimalOut -gappyout -fasta && \
+    trimal -in $muscleOut -out $trimalOut -gappyout -fasta && \
     echo "alignment ${trimalOut} for ${i} trimmed"
 done
 

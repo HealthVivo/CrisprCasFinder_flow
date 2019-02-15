@@ -20,7 +20,7 @@ for i in $(find "${ARGS[@]:2}" -type f -name "*_prodigalSeqs.faa" ! -size 0 -exe
     python3 /home/rambo/scripts/CrisprCasFinder_flow/python_scripts/fasta_clean.py --input "$comboFasta" --output "$comboFastaUAmbig" --seq_type amino --no_ambigs && \
     echo "running MUSCLE" && \
     muscleOut="${aligndir}/$(basename ${comboFastaUAmbig} | cut -f1 -d'.')_muscle.afa" && \
-    muscle -seqtype auto -in $comboFastaUAmbig -out $muscleOut -maxiters 10 -quiet && \
+    muscle -seqtype auto -in $comboFastaUAmbig -out $muscleOut -maxiters 10 && \
     echo "completed MUSCLE for ${i}" && \
     trimalOut="${aligndir}/$(basename ${muscleOut} | cut -f1 -d'.')_trimal.afa" && \
     $trimal -in $muscleOut -out $trimalOut -gappyout -fasta && \

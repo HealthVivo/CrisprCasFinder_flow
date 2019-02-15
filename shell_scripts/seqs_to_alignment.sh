@@ -20,7 +20,7 @@ for i in $(find "${ARGS[@]:2}" -type f -name "*_prodigalSeqs.faa" ! -size 0 -exe
     python3 /home/rambo/scripts/CrisprCasFinder_flow/python_scripts/fasta_clean.py --input "$comboFasta" --output "$comboFastaUAmbig" --seq_type amino --no_ambigs && \
     echo "running MAFFT" && \
     mafftOut="${aligndir}/$(basename ${comboFastaUAmbig} | cut -f1 -d'.')_mafft.afa" && \
-    mafft --auto --thread 10 --maxiterate 100 --reorder $comboFastaUAmbig > $mafftOut && \
+    mafft --auto --thread 10 --maxiterate 10 --reorder $comboFastaUAmbig > $mafftOut && \
     echo "completed MAFFT for ${i}" && \
     trimalOut="${aligndir}/$(basename ${mafftOut} | cut -f1 -d'.')_trimal.afa" && \
     $trimal -in $mafftOut -out $trimalOut -gappyout -fasta && \

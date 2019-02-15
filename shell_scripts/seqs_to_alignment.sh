@@ -18,12 +18,12 @@ for i in $(find "${ARGS[@]:2}" -type f -name "*_prodigalSeqs.faa" ! -size 0 -exe
     comboFastaUAmbig=$(echo "$comboFasta" | cut -f1 -d'.' | sed -e 's/$/_uambig.faa/') && \
     echo "unique headers and removing sequences with ambiguous characters" && \
     python3 /home/rambo/scripts/CrisprCasFinder_flow/python_scripts/fasta_clean.py --input "$comboFasta" --output "$comboFastaUAmbig" --seq_type amino --no_ambigs && \
-    echo "running MUSCLE" && \
-    muscleOut="${aligndir}/$(basename ${comboFastaUAmbig} | cut -f1 -d'.')_muscle.afa" && \
-    muscle -seqtype auto -in $comboFastaUAmbig -out $muscleOut -maxiters 10 && \
-    echo "completed MUSCLE for ${i}" && \
-    trimalOut="${aligndir}/$(basename ${muscleOut} | cut -f1 -d'.')_trimal.afa" && \
-    $trimal -in $muscleOut -out $trimalOut -gappyout -fasta && \
+    echo "running MAFFT" && \
+    mafftOut="${aligndir}/$(basename ${comboFastaUAmbig} | cut -f1 -d'.')_mafft.afa" && \
+    mafft --auto --thread 10 --maxiterate 100 --reorder $comboFastaUAmbig > $mafftOut && \
+    echo "completed MAFFT for ${i}" && \
+    trimalOut="${aligndir}/$(basename ${mafftOut} | cut -f1 -d'.')_trimal.afa" && \
+    $trimal -in $mafftOut -out $trimalOut -gappyout -fasta && \
     echo "alignment ${trimalOut} for ${i} trimmed"
 done
 

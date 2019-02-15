@@ -38,6 +38,8 @@ ambig_nuc = ['R','Y','W','S','K','M','D','V','H','B']
 seq_recs = SeqIO.parse(opts.input_file[0], 'fasta')
 seq_recs_uhead = []
 for record in seq_recs:
+    if str(record.seq).endswith('*'):
+        record.seq = record.seq[:-1]
     id_legal = illegals.sub('_', record.id)
     if record.id in header_counts:
         header_counts[record.id] += 1
@@ -48,6 +50,7 @@ for record in seq_recs:
     else:
         header_counts[record.id] = 0
         seq_recs_uhead.append(record)
+
 
 #seq_dict = SeqIO.to_dict([seq_recs_uhead)
 seq_dict = SeqIO.to_dict([s for s in seq_recs_uhead if not 'copy' in s.id])

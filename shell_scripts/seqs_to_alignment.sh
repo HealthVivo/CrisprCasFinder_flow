@@ -8,6 +8,7 @@ aligndir=${ARGS[1]}
 ###the first positional parameter is the directory for combined sequence file output
 ###the second positional parameter is the directory for multiple sequence alignment output
 
+trimal=/home/ninad/Scripts/Trimal/trimAl/source/trimal
 #for i in $(find guaymas compChrom-python sfbay_archaea sfbay_bacteria mb_nerr guaymas2018_archaea  -type f -name "*_prodigalSeqs.faa" ! -size 0 -exec basename {} \; | cut -f1 -d'_' | uniq); do
 for i in $(find "${ARGS[@]:2}" -type f -name "*_prodigalSeqs.faa" ! -size 0 -exec basename {} \; | cut -f1 -d'_' | uniq); do
     echo "making combined sequence file for ${i}" && \
@@ -22,7 +23,7 @@ for i in $(find "${ARGS[@]:2}" -type f -name "*_prodigalSeqs.faa" ! -size 0 -exe
     muscle -seqtype auto -in $comboFastaUAmbig -out $muscleOut -maxiters 1000 && \
     echo "completed MUSCLE for ${i}" && \
     trimalOut="${aligndir}/$(basename ${muscleOut} | cut -f1 -d'.')_trimal.afa" && \
-    trimal -in $muscleOut -out $trimalOut -gappyout -fasta && \
+    $trimal -in $muscleOut -out $trimalOut -gappyout -fasta && \
     echo "alignment ${trimalOut} for ${i} trimmed"
 done
 

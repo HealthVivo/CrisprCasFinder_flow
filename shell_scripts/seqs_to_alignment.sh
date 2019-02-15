@@ -2,8 +2,8 @@
 ARGS=("$@")
 seqdir=${ARGS[0]}
 aligndir=${ARGS[1]}
-###
-###How to use this script: bash seqs_to_alignment.sh <working directory> <dir_1> <dir_2> <dir_n>
+
+###How to use this script: bash seqs_to_alignment.sh <sequence dir> <alignment dir> <dir_1> <dir_2> ... <dir_n>
 ###dir_1 to dir_n are directories to search for input files
 ###the first positional parameter is the directory for combined sequence file output
 ###the second positional parameter is the directory for multiple sequence alignment output
@@ -20,7 +20,7 @@ for i in $(find "${ARGS[@]:2}" -type f -name "*_prodigalSeqs.faa" ! -size 0 -exe
     python3 /home/rambo/scripts/CrisprCasFinder_flow/python_scripts/fasta_clean.py --input "$comboFasta" --output "$comboFastaUAmbig" --seq_type amino --no_ambigs && \
     echo "running MUSCLE" && \
     muscleOut="${aligndir}/$(basename ${comboFastaUAmbig} | cut -f1 -d'.')_muscle.afa" && \
-    muscle -seqtype auto -in $comboFastaUAmbig -out $muscleOut -maxiters 1000 && \
+    muscle -seqtype auto -in $comboFastaUAmbig -out $muscleOut -maxiters 1000 -quiet && \
     echo "completed MUSCLE for ${i}" && \
     trimalOut="${aligndir}/$(basename ${muscleOut} | cut -f1 -d'.')_trimal.afa" && \
     $trimal -in $muscleOut -out $trimalOut -gappyout -fasta && \

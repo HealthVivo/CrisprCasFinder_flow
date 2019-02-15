@@ -49,7 +49,8 @@ for record in seq_recs:
         header_counts[record.id] = 0
         seq_recs_uhead.append(record)
 
-seq_dict = SeqIO.to_dict(seq_recs_uhead)
+#seq_dict = SeqIO.to_dict([seq_recs_uhead)
+seq_dict = SeqIO.to_dict([s for s in seq_recs_uhead if not 'copy' in s.id])
 
 #If no_ambigs == True, remove sequences with ambiguous amino acids or nucleotides
 if opts.ambig and opts.seqtype[0] == 'amino':

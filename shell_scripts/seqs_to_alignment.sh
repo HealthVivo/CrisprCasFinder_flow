@@ -25,3 +25,5 @@ for i in $(find "${ARGS[@]:2}" -type f -name "*_prodigalSeqs.faa" ! -size 0 -exe
     trimAl -in $muscleOut -out $trimalOut -gappyout -fasta && \
     echo "alignment ${trimalOut} for ${i} trimmed"
 done
+
+echo "FINISHED"

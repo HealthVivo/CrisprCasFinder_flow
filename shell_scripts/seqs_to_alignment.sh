@@ -23,7 +23,7 @@ for i in $(find "${ARGS[@]:3}" -type f -name "*_prodigalSeqs.faa" ! -size 0 -exe
     then
         echo "running MUSCLE" && \
         muscleOut="${aligndir}/$(basename ${comboFastaUAmbig} | cut -f1 -d'.')_muscle.afa" && \
-        muscle -seqtype auto -in $comboFastaUAmbig -out $muscleOut -maxiters 1000 -quiet && \
+        /usr/bin/muscle -seqtype auto -in $comboFastaUAmbig -out $muscleOut -maxiters 1000 -quiet && \
         echo "completed MUSCLE for ${i}" && \
         trimalOut="${aligndir}/$(basename ${muscleOut} | cut -f1 -d'.')_trimal.afa" && \
         $trimal -in $muscleOut -out $trimalOut -gappyout -fasta && \
@@ -34,7 +34,7 @@ for i in $(find "${ARGS[@]:3}" -type f -name "*_prodigalSeqs.faa" ! -size 0 -exe
     then
         echo "running MAFFT" && \
         mafftOut="${aligndir}/$(basename ${comboFastaUAmbig} | cut -f1 -d'.')_mafft.afa" && \
-        mafft --auto --thread 6 --maxiterate 100 --reorder && \
+        /usr/local/bin/mafft --auto --thread 6 --maxiterate 100 --reorder && \
         echo "completed MAFFT for ${i}" && \
         trimalOut="${aligndir}/$(basename ${mafftOut} | cut -f1 -d'.')_trimal.afa" && \
         $trimal -in $mafftOut -out $trimalOut -gappyout -fasta && \

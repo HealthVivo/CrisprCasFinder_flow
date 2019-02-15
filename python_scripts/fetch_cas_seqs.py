@@ -31,6 +31,9 @@ else:
     pass
 #------------------------------------------------------------------------------
 print('BEGIN')
+###
+###---MAIN
+###
 crdf = pd.read_csv(args['cas_gff'][0], comment = '#', header = None,
 names = ['seqid', 'source', 'ftype', 'targetid', 'phase',
 'start', 'end', 'strand', 'attributes'], sep = '\s+')

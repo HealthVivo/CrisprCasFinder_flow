@@ -13,7 +13,6 @@ nJob=$3 #number of simultaneous parallel jobs
 joblog=$4 #joblog from gnu parallel
 sleeptime=${5:-0s} #sleep time
 
-
 #Script is currently set for Genbank genomes
 #==============================================================================
 ###---MAIN---###
@@ -27,13 +26,25 @@ grep -o "ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/[0-9]\{3\}/[0-9]\{3\}/[0-9]\
     sed  -r 's|(ftp://ftp.ncbi.nlm.nih.gov/genomes/all/)(GCA/)([0-9]{3}/)([0-9]{3}/)([0-9]{3}/)(GCA_.+)|\1\2\3\4\5\6/\6_genomic.fna.gz|' | \
     sort | \
     uniq | \
-    parallel --eta --jobs $nJob --joblog $joblog "wget --quiet {} && sleep $sleeptime"
+    parallel --jobs $nJob --joblog $joblog "wget --quiet {} && sleep $sleeptime"
 
 #Did wget jobs complete successfully?
 exitStats=$( tail -n +2 $joblog | awk '$7 != 0' | wc -l )
 if [ "$exitStats" -gt 0 ]
 then
+    #If any wget jobs have errors, re-attempt the download(s)
     echo "WARNING: $exitStats wget jobs exited with errors"
+    echo "Re-attemping to download $exitStats files"
+    contCommands=$( tail -n +2 $joblog | awk '$7 != 0' | awk 'BEGIN {FS="\t"} {print $9}' )
+    contJoblog="$(echo ${joblog} | cut -f1 -d'.')_continue.log"
+    parallel --jobs $nJob --joblog $contJoblog {1} ::: $contCommands && sleep $sleeptime
+    contStats=$( tail -n +2 $contJoblog | awk '$7 != 0' | wc -l )
+    if [ "$contStats" -gt 0 ]
+    then
+        echo "WARNING: $contStats re-attempted wget jobs exited with errors"
+    else
+        echo "No re-attempted wget jobs exited with errors"
+        echo "Download re-attempts: DONE"
 else
     echo "No wget jobs exited with errors"
     echo "DONE"

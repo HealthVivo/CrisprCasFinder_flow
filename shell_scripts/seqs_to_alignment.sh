@@ -2,8 +2,10 @@
 ARGS=("$@")
 seqdir=${ARGS[0]}
 aligndir=${ARGS[1]}
+alignprog=${ARGS[2]}
 
-###How to use this script: bash seqs_to_alignment.sh <sequence directory> <alignment dir> <dir_1> <dir_2> <dir_n>
+###Ian Rambo 2019
+###How to use this script: bash seqs_to_alignment.sh <sequence directory> <alignment dir> <mafft|muscle> <dir_1> <dir_2> <dir_n>
 ###dir_1 to dir_n are directories to search for input files
 ###the first positional parameter is the directory for combined sequence file output
 ###the second positional parameter is the directory for multiple sequence alignment output
@@ -17,7 +19,8 @@ for i in $(find "${ARGS[@]:2}" -type f -name "*_prodigalSeqs.faa" ! -size 0 -exe
     find "${ARGS[@]:2}" -name "${i}_*prodigalSeqs.faa" -type f -exec cat {} \; > $comboFasta && \
     comboFastaUAmbig=$(echo "$comboFasta" | cut -f1 -d'.' | sed -e 's/$/_uambig.faa/') && \
     echo "unique headers and removing sequences with ambiguous characters" && \
-    python3 /home/rambo/scripts/CrisprCasFinder_flow/python_scripts/fasta_clean.py --input "$comboFasta" --output "$comboFastaUAmbig" --seq_type amino --no_ambigs && \
+    python3 /home/rambo/scripts/CrisprCasFinder_flow/python_scripts/fasta_clean.py --input "$comboFasta" --output "$comboFastaUAmbig" --seq_type amino --no_ambigs;
+    if [==]
     echo "running MAFFT" && \
     mafftOut="${aligndir}/$(basename ${comboFastaUAmbig} | cut -f1 -d'.')_mafft.afa" && \
     mafft --auto --thread 20 --maxiterate 100 --reorder $comboFastaUAmbig > $mafftOut && \

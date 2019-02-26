@@ -34,7 +34,7 @@ if [ "$exitStats" -gt 0 ]
 then
     #If any wget jobs have errors, re-attempt the download(s)
     echo "WARNING: $exitStats wget jobs exited with errors"
-    echo "Re-attemping to download $exitStats files"
+    echo "Re-attemping to download $exitStats files..." && sleep 3s
     contCommands=$( tail -n +2 $joblog | awk '$7 != 0' | awk 'BEGIN {FS="\t"} {print $9}' )
     contJoblog="$(echo ${joblog} | cut -f1 -d'.')_continue.log"
     parallel --jobs $nJob --joblog $contJoblog {1} ::: $contCommands && sleep $sleeptime

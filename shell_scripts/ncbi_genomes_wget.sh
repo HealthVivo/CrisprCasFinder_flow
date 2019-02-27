@@ -35,17 +35,17 @@ then
     #If any wget jobs have errors, re-attempt the download(s)
     echo "WARNING: $exitStats wget jobs exited with errors"
     echo "Re-attemping to download $exitStats files..." && sleep 3s
-    contCommands=$( tail -n +2 $joblog | awk '$7 != 0' | awk 'BEGIN {FS="\t"} {print $9}' | sed 's/wget --quiet/wget -c/g' )
-    contJoblog="$(echo ${joblog} | cut -f1 -d'.')_continue.log"
-    parallel --jobs $nJob --joblog $contJoblog {1} ::: $contCommands && sleep $sleeptime
-    contStats=$( tail -n +2 $contJoblog | awk '$7 != 0' | wc -l )
-    if [ "$contStats" -gt 0 ]
-    then
-        echo "WARNING: $contStats re-attempted wget jobs exited with errors"
-    else
-        echo "No re-attempted wget jobs exited with errors"
-        echo "Download re-attempts: DONE"
-    fi
+    # contCommands=$( tail -n +2 $joblog | awk '$7 != 0' | awk 'BEGIN {FS="\t"} {print $9}' | sed 's/wget --quiet/wget -c/g' )
+    # contJoblog="$(echo ${joblog} | cut -f1 -d'.')_continue.log"
+    # parallel --jobs $nJob --joblog $contJoblog {1} ::: $contCommands && sleep $sleeptime
+    # contStats=$( tail -n +2 $contJoblog | awk '$7 != 0' | wc -l )
+    # if [ "$contStats" -gt 0 ]
+    # then
+    #     echo "WARNING: $contStats re-attempted wget jobs exited with errors"
+    # else
+    #     echo "No re-attempted wget jobs exited with errors"
+    #     echo "Download re-attempts: DONE"
+    # fi
 else
     echo "No wget jobs exited with errors"
     echo "DONE"
@@ -57,7 +57,7 @@ prefix=$(basename "$genomeTable" | cut -f1 -d'.')
 md5sum_file=${prefix}_md5sum.out
 md5sum_check=${prefix}_md5sumchk.out
 awk '{FS=","} {print $15}' $genomeTable | grep 'ftp' | sed 's/"//g' | \
-    parallel --eta --jobs $nJob --joblog md5sum.log "wget --quiet -O - {}/md5checksums.txt && sleep $sleeptime" | \
+    parallel --jobs $nJob --joblog md5sum.log "wget --quiet -O - {}/md5checksums.txt && sleep $sleeptime" | \
     grep '_genomic.fna.gz' | \
     grep -v 'rna_from\|cds_from' > $md5sum_file
 

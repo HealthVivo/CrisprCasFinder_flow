@@ -45,6 +45,7 @@ then
     else
         echo "No re-attempted wget jobs exited with errors"
         echo "Download re-attempts: DONE"
+    fi
 else
     echo "No wget jobs exited with errors"
     echo "DONE"

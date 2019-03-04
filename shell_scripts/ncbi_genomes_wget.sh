@@ -23,10 +23,10 @@ sleeptime=${5:-0s} #sleep time
 printf "\n################ Downloading genome files ###############\n"
 cd $dbDir
 
-# grep -o "ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/[0-9]\{3\}/[0-9]\{3\}/[0-9]\{3\}/GCA_[0-9]\{9\}.[0-9]*[\.\_A-Za-z0-9\-]*" $genomeTable | \
-#     sed  -r 's|(ftp://ftp.ncbi.nlm.nih.gov/genomes/all/)(GCA/)([0-9]{3}/)([0-9]{3}/)([0-9]{3}/)(GCA_.+)|\1\2\3\4\5\6/\6_genomic.fna.gz|' | \
+grep -o "ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/[0-9]\{3\}/[0-9]\{3\}/[0-9]\{3\}/GCA_[0-9]\{9\}.[0-9]*[\.\_A-Za-z0-9\-]*" $genomeTable | \
+    sed  -r 's|(ftp://ftp.ncbi.nlm.nih.gov/genomes/all/)(GCA/)([0-9]{3}/)([0-9]{3}/)([0-9]{3}/)(GCA_.+)|\1\2\3\4\5\6/\6_genomic.fna.gz|' | \
 
-awk '{FS=","} {print $15}' $genomeTable | grep 'ftp' | sed 's/"//g' | \
+#awk '{FS=","} {print $15}' $genomeTable | grep 'ftp' | sed 's/"//g' | \
     sort | \
     uniq | \
     parallel --jobs $nJob --joblog $joblog "wget --quiet {} && sleep $sleeptime"

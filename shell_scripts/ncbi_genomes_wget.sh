@@ -35,17 +35,19 @@ then
     #If any wget jobs have errors, re-attempt the download(s)
     echo "WARNING: $exitStats wget jobs exited with errors"
     echo "Re-attemping to download $exitStats files..." && sleep 3s
-    # contCommands=$( tail -n +2 $joblog | awk '$7 != 0' | awk 'BEGIN {FS="\t"} {print $9}' | sed 's/wget --quiet/wget -c/g' )
-    # contJoblog="$(echo ${joblog} | cut -f1 -d'.')_continue.log"
-    # parallel --jobs $nJob --joblog $contJoblog {1} ::: $contCommands && sleep $sleeptime
-    # contStats=$( tail -n +2 $contJoblog | awk '$7 != 0' | wc -l )
-    # if [ "$contStats" -gt 0 ]
-    # then
-    #     echo "WARNING: $contStats re-attempted wget jobs exited with errors"
-    # else
-    #     echo "No re-attempted wget jobs exited with errors"
-    #     echo "Download re-attempts: DONE"
-    # fi
+    parallel --retry-failed --jobs $nJob --joblog $joblog
+
+    #contCommands=$( tail -n +2 $joblog | awk '$7 != 0' | awk 'BEGIN {FS="\t"} {print $9}' | sed 's/wget --quiet/wget -c/g' )
+    #contJoblog="$(echo ${joblog} | cut -f1 -d'.')_continue.log"
+    #parallel --jobs $nJob --joblog $contJoblog {1} ::: $contCommands && sleep $sleeptime
+    exitStats=$( tail -n +2 $joblog | awk '$7 != 0' | wc -l )
+    if [ "$exitStats" -gt 0 ]
+    then
+        echo "WARNING: $exitStats re-attempted wget jobs exited with errors"
+    else
+        echo "No re-attempted wget jobs exited with errors"
+        echo "Retry failed jobs: DONE"
+    fi
 else
     echo "No wget jobs exited with errors"
     echo "DONE"

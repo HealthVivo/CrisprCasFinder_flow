@@ -22,8 +22,11 @@ sleeptime=${5:-0s} #sleep time
 
 printf "\n################ Downloading genome files ###############\n"
 cd $dbDir
-grep -o "ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/[0-9]\{3\}/[0-9]\{3\}/[0-9]\{3\}/GCA_[0-9]\{9\}.[0-9]*[\.\_A-Za-z0-9\-]*" $genomeTable | \
-    sed  -r 's|(ftp://ftp.ncbi.nlm.nih.gov/genomes/all/)(GCA/)([0-9]{3}/)([0-9]{3}/)([0-9]{3}/)(GCA_.+)|\1\2\3\4\5\6/\6_genomic.fna.gz|' | \
+
+# grep -o "ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/[0-9]\{3\}/[0-9]\{3\}/[0-9]\{3\}/GCA_[0-9]\{9\}.[0-9]*[\.\_A-Za-z0-9\-]*" $genomeTable | \
+#     sed  -r 's|(ftp://ftp.ncbi.nlm.nih.gov/genomes/all/)(GCA/)([0-9]{3}/)([0-9]{3}/)([0-9]{3}/)(GCA_.+)|\1\2\3\4\5\6/\6_genomic.fna.gz|' | \
+
+awk '{FS=","} {print $15}' $genomeTable | grep 'ftp' | sed 's/"//g' | \
     sort | \
     uniq | \
     parallel --jobs $nJob --joblog $joblog "wget --quiet {} && sleep $sleeptime"
@@ -60,7 +63,11 @@ printf "\n################ Downloading md5sum files ###############\n"
 prefix=$(basename "$genomeTable" | cut -f1 -d'.')
 md5sum_file=${prefix}_md5sum.out
 md5sum_check=${prefix}_md5sumchk.out
-awk '{FS=","} {print $15}' $genomeTable | grep 'ftp' | sed 's/"//g' | \
+
+awk '{FS=","} {print $15}' $genomeTable | grep 'ftp' | \
+    sed 's/"//g' | \
+    sort | \
+    uniq | \
     parallel --jobs $nJob --joblog md5sum.log "wget --quiet -O - {}/md5checksums.txt && sleep $sleeptime" | \
     grep '_genomic.fna.gz' | \
     grep -v 'rna_from\|cds_from' > $md5sum_file

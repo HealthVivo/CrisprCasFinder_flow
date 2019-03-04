@@ -43,8 +43,8 @@ then
     #contCommands=$( tail -n +2 $joblog | awk '$7 != 0' | awk 'BEGIN {FS="\t"} {print $9}' | sed 's/wget --quiet/wget -c/g' )
     #contJoblog="$(echo ${joblog} | cut -f1 -d'.')_continue.log"
     #parallel --jobs $nJob --joblog $contJoblog {1} ::: $contCommands && sleep $sleeptime
-    exitStats_ret=$( tail -n +2 $joblog | awk '$7 != 0' | wc -l )
-    let "exitDiff = $exitStats_ret - $exitStats"
+    exitStatsRet=$( tail -n +2 $joblog | awk '$7 != 0' | wc -l )
+    let "exitDiff = $exitStatsRet - $exitStats"
     #if [ "$exitStats_ret" -gt 0 ]
     if [ "$exitDiff" -gt 0 ]
     then

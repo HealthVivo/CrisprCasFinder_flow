@@ -48,7 +48,7 @@ then
     #if [ "$exitStats_ret" -gt 0 ]
     if [ "$exitDiff" -gt 0 ]
     then
-        echo "WARNING: $exitStats re-attempted wget jobs exited with errors"
+        echo "WARNING: $exitDiff re-attempted wget jobs exited with errors"
     else
         echo "No re-attempted wget jobs exited with errors"
         echo "Retry failed jobs: DONE"

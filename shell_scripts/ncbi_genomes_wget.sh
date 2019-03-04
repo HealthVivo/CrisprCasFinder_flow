@@ -35,7 +35,7 @@ then
     #If any wget jobs have errors, re-attempt the download(s)
     echo "WARNING: $exitStats wget jobs exited with errors"
     echo "Re-attemping to download $exitStats files..." && sleep 3s
-    parallel --retry-failed --jobs $nJob --joblog $joblog
+    gnu_parallel --retry-failed --jobs $nJob --joblog $joblog
 
     #contCommands=$( tail -n +2 $joblog | awk '$7 != 0' | awk 'BEGIN {FS="\t"} {print $9}' | sed 's/wget --quiet/wget -c/g' )
     #contJoblog="$(echo ${joblog} | cut -f1 -d'.')_continue.log"
